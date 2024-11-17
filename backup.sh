@@ -26,6 +26,7 @@ export RESTIC_PASSWORD
   printf "\nSTARTING BACKUP\n"
   timeout -s TERM "$TIMEOUT" restic \
     --skip-if-unchanged \
+    --compression max \
     --verbose \
     backup \
     --files-from "$FILES_FROM"
