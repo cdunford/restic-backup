@@ -17,6 +17,9 @@ pushd "$ROOT_DIR" || exit
 RESTIC_PASSWORD=$(gpg --quiet --for-your-eyes-only --no-tty --decrypt "$PASSWORD_FILE")
 export RESTIC_PASSWORD
 
+GOMAXPROCS=2
+export GOMAXPROCS
+
 {
   echo "Working directory $(pwd)"
   cat "$FILES_FROM"
@@ -26,10 +29,10 @@ export RESTIC_PASSWORD
   printf "\nSTARTING BACKUP\n"
   timeout -s TERM "$TIMEOUT" restic \
     --skip-if-unchanged \
-    --compression max \
     --verbose \
     backup \
-    --files-from "$FILES_FROM"
+    --files-from "$FILES_FROM" \
+    --compression max
 
   if [ $? -eq 124 ]; then
     printf "\nBACKUP TIMEOUT\n"
